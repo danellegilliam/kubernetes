@@ -8,3 +8,6 @@
 
 - name: Import containerd tasks
   ansible.builtin.import_tasks: containerd.yml
+
+- name: Import kube components tasks
+  ansible.builtin.import_tasks: kube_components.yml
