@@ -2,3 +2,9 @@
 ---
 - name: Import swap tasks
   ansible.builtin.import_tasks: swap.yml
+
+- name: Import kernel tasks
+  ansible.builtin.import_tasks: kernel.yml
+
+- name: Import containerd tasks
+  ansible.builtin.import_tasks: containerd.yml

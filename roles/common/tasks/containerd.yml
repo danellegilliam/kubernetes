@@ -1,0 +1,50 @@
+# code: language=ansible
+---
+- name: Uninstall packages that may interfere with containerd
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: absent
+    update_cache: true
+  loop:
+    - podman
+    - buildah
+
+- name: Install yum-utils
+  ansible.builtin.dnf:
+    name: yum-utils
+    state: present
+    update_cache: true
+
+- name: Add docker repository
+  ansible.builtin.dnf:
+    name: https://download.docker.com/linux/centos/docker-ce.repo
+    state: present
+    update_cache: true
+
+- name: Install containerd
+  ansible.builtin.dnf:
+    name: containerd.io
+    state: present
+    update_cache: true
+
+- name: Create containerd config directory
+  ansible.builtin.file:
+    path: /etc/containerd
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: Copy containerd config file
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/config.toml"
+    dest: /etc/containerd/config.toml
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Restart containerd
+  ansible.builtin.systemd:
+    name: containerd
+    state: restarted
+    daemon_reload: true

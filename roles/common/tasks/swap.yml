@@ -17,4 +17,3 @@
     regexp: "^(/swap.img.*)"
     line: S"#\\1"
     backrefs: true
-    
