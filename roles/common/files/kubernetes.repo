@@ -1,6 +1,0 @@
-[kubernetes]
-name=Kubernetes
-baseurl=https://k8s.io
-enabled=1
-gpgcheck=1
-gpgkey=https://k8s.iorepodata/repomd.xml.key

@@ -9,8 +9,8 @@
     insertafter: EOF
 
 - name: Copy kubernetes repo file
-  ansible.builtin.copy:
-    src: "{{ role_path }}/files/kubernetes.repo"
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/kubernetes.repo.j2"
     dest: /etc/yum.repos.d/kubernetes.repo
     owner: root
     group: root
