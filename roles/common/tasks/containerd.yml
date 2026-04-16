@@ -15,11 +15,11 @@
     state: present
     update_cache: true
 
-- name: Add docker repository
-  ansible.builtin.dnf:
-    name: https://download.docker.com/linux/centos/docker-ce.repo
-    state: present
-    update_cache: true
+- name: Download the YUM repo file
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+    mode: '0644'
 
 - name: Install containerd
   ansible.builtin.dnf:
