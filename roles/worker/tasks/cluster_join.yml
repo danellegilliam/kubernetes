@@ -5,6 +5,10 @@
     path: /etc/kubernetes/kubelet.conf
   register: worker_kubelet_con
 
+- name: Debug
+  ansible.builtin.debug:
+    msg: "{{ hostvars[groups['master']] }}"
+
 - name: Run kubeadm join
   ansible.builtin.command: "{{ hostvars[groups['master'][0]]['master_join_command'] }} --v=5"
   when: not worker_kubelet_con.stat.exists
