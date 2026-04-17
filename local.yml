@@ -3,4 +3,13 @@
   hosts: all
   roles:
     - common
+
+- name: Master role
+  hosts: master
+  roles:
     - master
+
+- name: Worker role
+  hosts: worker
+  roles:
+    - worker
