@@ -18,7 +18,7 @@
 
 - name: Install kubelet, kubeadm, and kubectl
   ansible.builtin.dnf:
-    name: "{{ item.name }}={{ item.version }}"
+    name: "{{ item.name }}-{{ item.version }}"
     state: present
     update_cache: true
     disable_excludes: all
