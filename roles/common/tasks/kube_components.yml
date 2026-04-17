@@ -16,51 +16,10 @@
     group: root
     mode: "0644"
 
-# - name: Install kubelet, kubeadm, and kubectl
-#   ansible.builtin.dnf:
-#     name: "{{ item.name }}={{ item.version }}"
-#     state: present
-#     update_cache: true
-#   loop: "{{ kubernetes_packages }}"
-
-# - name: Disable excludes for kubernetes repo
-#   ansible.builtin.dnf:
-#     name: kubernetes
-#     disable_excludes: "kubernetes"
-#     state: present
-#     update_cache: true
-
-# - name: Hold kubelet, kubeadm, and kubectl at current version
-#   ansible.builtin.dnf_selections:
-#     name: "{{ item.name }}"
-#     selection: hold
-#   loop: "{{ kubernetes_packages }}"
-
-# - name: Ensure keyrings directory exists
-#   ansible.builtin.file:
-#     path: /etc/apt/trusted.gpg.d/
-#     state: directory
-#     mode: "0755"
-
-# - name: Add kubernetes apt repository with embedded key
-#   ansible.builtin.deb822_repository:
-#     name: kubernetes
-#     types: deb
-#     signed_by: https://pkgs.k8s.io/core:/stable:/v1.{{ kubernetes_minor_version }}/deb/Release.key
-#     uris: "https://pkgs.k8s.io/core:/stable:/v1.{{ kubernetes_minor_version }}/deb/"
-#     suites: "/"
-#     state: present
-#     enabled: true
-
-# - name: Install kubelet, kubeadm, and kubectl
-#   ansible.builtin.apt:
-#     name: "{{ item.name }}={{ item.version }}"
-#     state: present
-#     update_cache: true
-#   loop: "{{ kubernetes_packages }}"
-
-# - name: Hold kubelet, kubeadm, and kubectl at current version
-#   ansible.builtin.dpkg_selections:
-#     name: "{{ item.name }}"
-#     selection: hold
-#   loop: "{{ kubernetes_packages }}"
+- name: Install kubelet, kubeadm, and kubectl
+  ansible.builtin.dnf:
+    name: "{{ item.name }}={{ item.version }}"
+    state: present
+    update_cache: true
+    disable_excludes: all
+  loop: "{{ kubernetes_packages }}"
