@@ -38,11 +38,9 @@
 - name: Create join command file
   ansible.builtin.command:
     cmd: kubeadm token create --print-join-command
-  register: master_join_command_result
+  register: master_join_command_raw
   changed_when: false
 
-- name: Save join command to file
-  ansible.builtin.copy:
-    content: "{{ master_join_command_result.stdout }}"
-    dest: "{{ lookup('env', 'PWD') }}/files/join-command.txt"
-    mode: "0755"
+- name: Set join command as a fact
+  ansible.builtin.set_fact:
+    master_join_command: "{{ master_join_command_raw.stdout_lines[] }}"

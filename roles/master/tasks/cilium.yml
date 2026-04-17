@@ -1,0 +1,21 @@
+# code: language=ansible
+---
+- name: Ensure BPF filesystem is mounted
+  ansible.posix.mount:
+    path: /sys/fs/bpf
+    src: bpf
+    fstype: bpf
+    opts: rw,nosuid,nodev,noexec,relatime
+    state: mounted
+
+- name: Install Cilium
+  ansible.builtin.pause:
+    prompt: |
+      Perform the below steps, then press Enter to continßue:
+      1. Install Cilium CLI (version 0.19.2)
+      2. Install Cilium
+         cilium install --values {{ role_path }}/files/cilium-values.yml
+      3. Get cilium status
+         cilium status
+      4. Run connectivity test
+         cilium connectivity test

@@ -1,0 +1,16 @@
+# code: language=ansible
+---
+- name: Check if node is already joined
+  ansible.builtin.stat:
+    path: /etc/kubernetes/kubelet.conf
+  register: worker_kubelet_con
+
+- name: Run kubeadm join
+  ansible.builtin.command: "{{ hostvars[groups['master'][0]]['master_join_command'] }} --v=5"
+  when: not worker_kubelet_con.stat.exists
+  register: worker_join_result
+  changed_when: "'Cluster join command executed' in worker_join_result.stdout"
+
+- name: Debug join output
+  ansible.builtin.debug:
+    var: worker_join_result.stdout
