@@ -1,0 +1,48 @@
+# code: language=ansible
+---
+- name: Check if cluster is already initialized
+  ansible.builtin.stat:
+    path: /etc/kubernetes/admin.conf
+  register: master_cluster_exists
+
+- name: Initialize the Kubernetes cluster
+  ansible.builtin.command:
+    cmd: kubeadm init --pod-network-cidr={{ pod_network_cidr }}
+  register: master_kubeadm_init_result
+  when: not master_cluster_exists.stat.exists
+  changed_when: "'Cluster bootstrap successfully' in master_kubeadm_init_result.stdout"
+
+- name: Create .kube directory for the current user
+  ansible.builtin.file:
+    path: "/home/{{ user_name }}/.kube"
+    state: directory
+    mode: "0755"
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+
+- name: Copy admin.conf to user's .kube directory
+  ansible.builtin.copy:
+    src: "/etc/kubernetes/admin.conf"
+    dest: "/home/{{ user_name }}/.kube/config"
+    remote_src: true
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+    mode: "0600"
+
+- name: Fetch kubeconfig from Master VM to local workstation
+  ansible.builtin.fetch:
+    src: /etc/kubernetes/admin.conf
+    dest: "{{ lookup('env', 'PWD') }}/files//kubeconfig"
+    flat: true
+
+- name: Create join command file
+  ansible.builtin.command:
+    cmd: kubeadm token create --print-join-command
+  register: master_join_command_result
+  changed_when: false
+
+- name: Save join command to file
+  ansible.builtin.copy:
+    content: "{{ join_command_result.stdout }}"
+    dest: "{{ lookup('env', 'PWD') }}/files/join-command.txt"
+    mode: "0755"

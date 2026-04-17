@@ -1,0 +1,2 @@
+- name: Import cluster creation tasks
+  ansible.builtin.import_tasks: cluster_creation.yml

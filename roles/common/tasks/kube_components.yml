@@ -23,3 +23,9 @@
     update_cache: true
     disable_excludes: all
   loop: "{{ kubernetes_packages }}"
+
+- name: Enable and start kubelet
+  ansible.builtin.systemd:
+    name: kubelet
+    enabled: true
+    state: started
