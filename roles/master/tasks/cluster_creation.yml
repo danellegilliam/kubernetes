@@ -43,6 +43,6 @@
 
 - name: Save join command to file
   ansible.builtin.copy:
-    content: "{{ join_command_result.stdout }}"
+    content: "{{ master_join_command_result.stdout }}"
     dest: "{{ lookup('env', 'PWD') }}/files/join-command.txt"
     mode: "0755"

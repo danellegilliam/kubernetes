@@ -12,4 +12,3 @@ kubernetes_packages:
   - { name: "kubelet", version: "1.35.4-150500.1.1" }
   - { name: "kubeadm", version: "1.35.4-150500.1.1" }
   - { name: "kubectl", version: "1.35.4-150500.1.1" }
-  
