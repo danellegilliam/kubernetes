@@ -41,10 +41,6 @@
   register: master_join_command_raw
   changed_when: false
 
-- name: Debug task
-  ansible.builtin.debug:
-    msg: "{{ master_join_command_raw.stdout_lines[0] }}"
-
-# - name: Set join command as a fact
-#   ansible.builtin.set_fact:
-#     master_join_command: "{{ master_join_command_raw.stdout_lines[0] }}"
+- name: Set join command as a fact
+  ansible.builtin.set_fact:
+    master_join_command: "{{ master_join_command_raw.stdout_lines[0] }}"
