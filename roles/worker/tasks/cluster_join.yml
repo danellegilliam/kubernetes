@@ -7,7 +7,7 @@
 
 - name: Debug
   ansible.builtin.debug:
-    msg: "{{ hostvars[groups['master']] }}"
+    msg: "{{ hostvars[] }}"
 
 - name: Run kubeadm join
   ansible.builtin.command: "{{ hostvars[groups['master'][0]]['master_join_command'] }} --v=5"
