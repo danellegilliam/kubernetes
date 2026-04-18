@@ -1,2 +1,4 @@
+# code: language=ansible
+---
 - name: Import cluster join tasks
   ansible.builtin.import_tasks: cluster_join.yml

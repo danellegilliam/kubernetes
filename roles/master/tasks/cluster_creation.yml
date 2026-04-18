@@ -7,7 +7,7 @@
 
 - name: Initialize the Kubernetes cluster
   ansible.builtin.command:
-    cmd: kubeadm init --pod-network-cidr={{ pod_network_cidr }}
+    cmd: kubeadm init --token={{ lookup('env', 'BOOTSTRAP_TOKEN') }} --pod-network-cidr={{ pod_network_cidr }}
   register: master_kubeadm_init_result
   when: not master_cluster_exists.stat.exists
   changed_when: "'Cluster bootstrap successfully' in master_kubeadm_init_result.stdout"
@@ -28,19 +28,3 @@
     owner: "{{ user_name }}"
     group: "{{ user_name }}"
     mode: "0600"
-
-- name: Fetch kubeconfig from Master VM to local workstation
-  ansible.builtin.fetch:
-    src: /etc/kubernetes/admin.conf
-    dest: "{{ lookup('env', 'PWD') }}/files//kubeconfig"
-    flat: true
-
-- name: Create join command file
-  ansible.builtin.command:
-    cmd: kubeadm token create --print-join-command
-  register: master_join_command_raw
-  changed_when: false
-
-- name: Set join command as a fact
-  ansible.builtin.set_fact:
-    master_join_command: "{{ master_join_command_raw.stdout_lines[0] }}"

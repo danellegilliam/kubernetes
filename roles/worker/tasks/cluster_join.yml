@@ -1,20 +1,21 @@
 # code: language=ansible
 ---
-# - name: Check if node is already joined
-#   ansible.builtin.stat:
-#     path: /etc/kubernetes/kubelet.conf
-#   register: worker_kubelet_con
+- name: Wait for cluster creation completion
+  ansible.builtin.wait_for:
+    timeout: 300
+    sleep: 5
+    state: started
+    port: "{{ master_kube_api_port }}"
+    host: "{{ master_ip }}"
 
-- name: Debug
-  ansible.builtin.debug:
-    msg: "{{ hostvars[groups['master'][0]]['master_join_command'] }}"
+- name: Check if node is already joined
+  ansible.builtin.stat:
+    path: /etc/kubernetes/kubelet.conf
+  register: worker_kubelet_con
 
-# - name: Run kubeadm join
-#   ansible.builtin.command: "{{ hostvars[groups['master'][0]]['master_join_command'] }} --v=5"
-#   when: not worker_kubelet_con.stat.exists
-#   register: worker_join_result
-#   changed_when: "'Cluster join command executed' in worker_join_result.stdout"
-
-# - name: Debug join output
-#   ansible.builtin.debug:
-#     var: worker_join_result.stdout
+- name: Run kubeadm join
+  ansible.builtin.command:
+    cmd: "kubeadm join {{ master_ip }}:{{ master_kube_api_port }} --token {{ lookup('env', 'BOOTSTRAP_TOKEN') }} --discovery-token-unsafe-skip-ca-verification"
+  when: not worker_kubelet_con.stat.exists
+  register: worker_join_result
+  changed_when: "'Cluster join command executed' in worker_join_result.stdout"
