@@ -1,0 +1,17 @@
+# code: language=ansible
+---
+- name: Create a directory
+  ansible.builtin.file:
+    path: "{{ nfs_mount_point }}"
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: Mount up device by UUID
+  ansible.posix.mount:
+    path: "{{ nfs_mount_point }}"
+    src: "{{ nfs_server }}:{{ nfs_mount_point }}"
+    fstype: nfs
+    opts: rw,sync,hard
+    state: mounted

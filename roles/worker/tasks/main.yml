@@ -1,7 +1,7 @@
 # code: language=ansible
 ---
-- name: Import longhorn tasks
-  ansible.builtin.import_tasks: longhorn.yml
+- name: Import nfs tasks
+  ansible.builtin.import_tasks: nfs.yml
 
 - name: Import cluster join tasks
   ansible.builtin.import_tasks: cluster_join.yml
