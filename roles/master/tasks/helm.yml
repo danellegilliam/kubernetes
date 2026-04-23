@@ -1,0 +1,29 @@
+- name: Check if helm is already installed
+  ansible.builtin.stat:
+    path: /usr/local/bin/helm
+  register: master_helm_status
+  ignore_errors: true
+
+- name: Install helm
+  block:
+    - name: Create temp directory
+      ansible.builtin.file:
+        path: /home/dgilliam/tmp
+        state: directory
+        mode: '0755'
+    - name: Download and extract helm
+      ansible.builtin.unarchive:
+        src: https://get.helm.sh/helm-v{{ helm_version }}-linux-amd64.tar.gz
+        dest: /home/dgilliam/tmp
+        remote_src: true
+    - name: Copy helm to /usr/local/bin
+      ansible.builtin.copy:
+        src: /home/dgilliam/tmp/linux-amd64/helm
+        dest: /usr/local/bin/helm
+        mode: '0755'
+    - name: Clean up temp directory
+      ansible.builtin.file:
+        path: /home/dgilliam/tmp
+        state: absent
+  when: not master_helm_status.stat.exists
+  

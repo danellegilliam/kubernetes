@@ -1,0 +1,5 @@
+# code: language=yaml
+---
+master_helm_version: "4.1.4"
+master_helm_download_url: "https://get.helm.sh/helm-{{helm_version}}-linux-amd64.tar.gz"
+helm_destination_directory: "/usr/local/bin"
